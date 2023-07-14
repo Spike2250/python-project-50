@@ -1,9 +1,6 @@
 install:
 	poetry install
 
-gendiff:
-	poetry run gendiff
-
 build:
 	poetry build
 
@@ -15,3 +12,16 @@ package-install:
 
 lint:
 	poetry run flake8 gendiff
+
+gendiff:
+	poetry run gendiff
+
+check:
+	poetry run flake8 gendiff
+	poetry run flake8 tests
+
+test:
+	poetry run pytest
+
+test-coverage:
+	poetry run pytest --cov
