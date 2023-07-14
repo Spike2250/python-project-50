@@ -3,26 +3,7 @@ import json
 
 def generate_diff(args) -> str:
     first_file, second_file = read_files(args)
-
-    result = '{\n'
-
-    keys1 = list(first_file.keys())
-    keys2 = list(second_file.keys())
-    keys = list(set(keys1 + keys2))
-    keys.sort()
-
-    for key in keys:
-        if key in keys1 and key in keys2:
-            if first_file[key] == second_file[key]:
-                result += f"    {key}: {first_file[key]}\n"
-            else:
-                result += f"  - {key}: {first_file[key]}\n"
-                result += f"  + {key}: {second_file[key]}\n"
-        elif key in keys1 and key not in keys2:
-            result += f"  - {key}: {first_file[key]}\n"
-        else:
-            result += f"  + {key}: {second_file[key]}\n"
-    result += '}'
+    result = write_result(first_file, second_file)
     return result
 
 
@@ -34,3 +15,26 @@ def read_files(args):
         case _:
             return 'incorrect format'
     return first_file, second_file
+
+
+def write_result(dict1, dict2):
+    result = '{\n'
+
+    keys1 = list(dict1.keys())
+    keys2 = list(dict2.keys())
+    keys = list(set(keys1 + keys2))
+    keys.sort()
+
+    for key in keys:
+        if key in keys1 and key in keys2:
+            if dict1[key] == dict2[key]:
+                result += f"    {key}: {dict1[key]}\n"
+            else:
+                result += f"  - {key}: {dict1[key]}\n"
+                result += f"  + {key}: {dict2[key]}\n"
+        elif key in keys1 and key not in keys2:
+            result += f"  - {key}: {dict1[key]}\n"
+        else:
+            result += f"  + {key}: {dict2[key]}\n"
+    result += '}'
+    return result
