@@ -17,7 +17,7 @@ def read_files(args):
     return first_file, second_file
 
 
-def write_result(dict1, dict2):
+def write_result(dict1, dict2) -> str:
     result = '{\n'
 
     keys1 = list(dict1.keys())
