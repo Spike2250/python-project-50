@@ -24,4 +24,7 @@ test:
 	poetry run pytest
 
 test-coverage:
-	poetry run pytest --cov
+	poetry run pytest --cov=gendiff --cov-report xml
+
+coverage-missing:
+	poetry run pytest --cov-report term-missing --cov=gendiff
