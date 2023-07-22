@@ -30,6 +30,7 @@ result_string_1 = """{
   + verbose: true
 }"""
 
+
 result_string_2 = """{
     common: {
       + follow: false
@@ -73,4 +74,4 @@ result_string_2 = """{
         }
         fee: 100500
     }
-}"""
+}"""  # noqa: W291

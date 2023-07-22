@@ -38,7 +38,7 @@ def generate_diff(args) -> str:
 #     return result
 
 
-def analyse_diff_files(dict1, dict2) -> list:  # noqa: C901"
+def analyse_diff_files(dict1, dict2) -> list:  # noqa: C901
     Diff_str = namedtuple('Diff_str', ('status', 'key', 'value'))
 
     def iter_(dict1, dict2):
