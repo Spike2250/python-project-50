@@ -17,17 +17,17 @@ result_list_2 = [
         Diff_str(' ', 'settings1', 'Value 1'),
         Diff_str('-', 'settings2', 200),
         Diff_str('-', 'settings3', True),
-        Diff_str('+', 'settings3', 'null'),
+        Diff_str('+', 'settings3', None),
     ])
 ]
 
 result_string_1 = """{
-  - follow: False
+  - follow: false
     host: hexlet.io
   - proxy: 123.234.53.22
   - timeout: 50
   + timeout: 20
-  + verbose: True
+  + verbose: true
 }"""
 
 result_string_2 = """{
