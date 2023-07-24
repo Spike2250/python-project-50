@@ -3,10 +3,12 @@ import json
 import yaml
 from pathlib import Path
 from tests.fixtures import result_lists
-from tests.fixtures import result_strings
+from tests.fixtures import result_stylish_strings
+from tests.fixtures import result_plain_strings
 
 from gendiff.diff.analyse import analyse_diff_files
-from gendiff.diff.stringify import stringify
+from gendiff.diff.formats.stylish import stylish
+from gendiff.diff.formats.plain import plain
 
 
 @pytest.fixture
@@ -72,16 +74,27 @@ def test_analyse_files(coll):
     assert result_yaml == result_lists.nest
 
 
-def test_stringify():
-    assert stringify(result_lists.simple) == result_strings.simple
-    assert stringify(result_lists.nest) == result_strings.nest
+def test_stylish():
+    assert stylish(result_lists.simple) == result_stylish_strings.simple
+    assert stylish(result_lists.nest) == result_stylish_strings.nest
+    assert stylish(result_lists.difficult) == result_stylish_strings.difficult
+
+
+def test_plain():
+    assert plain(result_lists.simple) == result_plain_strings.simple
+    assert plain(result_lists.nest) == result_plain_strings.nest
+    assert plain(result_lists.difficult) == result_plain_strings.difficult
 
 
 def test_gendiff(coll):
-    result_json = stringify(
+    result_json = stylish(
         analyse_diff_files(coll['file1_json'], coll['file2_json']))
-    assert result_json == result_strings.difficult
+    assert result_json == result_stylish_strings.difficult
 
-    result_yaml = stringify(
+    result_yaml = stylish(
         analyse_diff_files(coll['file1_nest_yml'], coll['file2_nest_yml']))
-    assert result_yaml == result_strings.nest
+    assert result_yaml == result_stylish_strings.nest
+
+    result_json = plain(
+        analyse_diff_files(coll['file1_json'], coll['file2_json']))
+    assert result_json == result_plain_strings.difficult

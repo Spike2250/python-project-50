@@ -2,7 +2,7 @@ import itertools
 import json
 
 
-def stringify(value, replacer=' ', spaces_count=2) -> str:
+def stylish(value, replacer=' ', spaces_count=2) -> str:
 
     def iter_(value, depth):
         if not isinstance(value, list):
