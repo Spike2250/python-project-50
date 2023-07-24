@@ -2,39 +2,53 @@ import pytest
 import json
 import yaml
 from pathlib import Path
-from tests.fixtures import result_gendiff as test_data
+from tests.fixtures import result_lists
+from tests.fixtures import result_strings
 
-from gendiff.diff.diff import stringify, analyse_diff_files
+from gendiff.diff.analyse import analyse_diff_files
+from gendiff.diff.stringify import stringify
 
 
 @pytest.fixture
 def coll():
     path = 'tests/fixtures/'
     # плоские структуры
-    file1_s_json = 'file1_simple.json'
-    file2_s_json = 'file2_simple.json'
-    file1_s_yml = 'file1_simple.yaml'
-    file2_s_yml = 'file2_simple.yaml'
+    file1_simple_json = 'file1_simple.json'
+    file2_simple_json = 'file2_simple.json'
+    file1_simple_yml = 'file1_simple.yaml'
+    file2_simple_yml = 'file2_simple.yaml'
     # вложенные структуры
+    file1_nest_json = 'file1_nest.json'
+    file2_nest_json = 'file2_nest.json'
+    file1_nest_yml = 'file1_nest.yaml'
+    file2_nest_yml = 'file2_nest.yaml'
     file1_json = 'file1.json'
     file2_json = 'file2.json'
     file1_yml = 'file1.yaml'
     file2_yml = 'file2.yaml'
 
-    path_file1_s_json = Path(Path.cwd(), path, file1_s_json)
-    path_file2_s_json = Path(Path.cwd(), path, file2_s_json)
-    path_file1_s_yml = Path(Path.cwd(), path, file1_s_yml)
-    path_file2_s_yml = Path(Path.cwd(), path, file2_s_yml)
+    path_file1_simple_json = Path(Path.cwd(), path, file1_simple_json)
+    path_file2_simple_json = Path(Path.cwd(), path, file2_simple_json)
+    path_file1_simple_yml = Path(Path.cwd(), path, file1_simple_yml)
+    path_file2_simple_yml = Path(Path.cwd(), path, file2_simple_yml)
+    path_file1_nest_json = Path(Path.cwd(), path, file1_nest_json)
+    path_file2_nest_json = Path(Path.cwd(), path, file2_nest_json)
+    path_file1_nest_yml = Path(Path.cwd(), path, file1_nest_yml)
+    path_file2_nest_yml = Path(Path.cwd(), path, file2_nest_yml)
     path_file1_json = Path(Path.cwd(), path, file1_json)
     path_file2_json = Path(Path.cwd(), path, file2_json)
     path_file1_yml = Path(Path.cwd(), path, file1_yml)
     path_file2_yml = Path(Path.cwd(), path, file2_yml)
 
     return {
-        'file1_s_json': json.load(open(path_file1_s_json)),
-        'file2_s_json': json.load(open(path_file2_s_json)),
-        'file1_s_yml': yaml.safe_load(open(path_file1_s_yml)),
-        'file2_s_yml': yaml.safe_load(open(path_file2_s_yml)),
+        'file1_simple_json': json.load(open(path_file1_simple_json)),
+        'file2_simple_json': json.load(open(path_file2_simple_json)),
+        'file1_simple_yml': yaml.safe_load(open(path_file1_simple_yml)),
+        'file2_simple_yml': yaml.safe_load(open(path_file2_simple_yml)),
+        'file1_nest_json': json.load(open(path_file1_nest_json)),
+        'file2_nest_json': json.load(open(path_file2_nest_json)),
+        'file1_nest_yml': yaml.safe_load(open(path_file1_nest_yml)),
+        'file2_nest_yml': yaml.safe_load(open(path_file2_nest_yml)),
         'file1_json': json.load(open(path_file1_json)),
         'file2_json': json.load(open(path_file2_json)),
         'file1_yml': yaml.safe_load(open(path_file1_yml)),
@@ -43,23 +57,31 @@ def coll():
 
 
 def test_analyse_files(coll):
-    result_json = analyse_diff_files(coll['file1_s_json'],
-                                     coll['file2_s_json'])
-    assert result_json == test_data.result_list_1
-    result_yaml = analyse_diff_files(coll['file1_s_yml'],
-                                     coll['file2_s_yml'])
-    assert result_yaml == test_data.result_list_1
-    # result_json = analyse_diff_files(coll['file1_json'], coll['file2_json'])
-    # assert result_json == test_data.result_list
-    # result_yaml = analyse_diff_files(coll['file1_yml'], coll['file2_yml'])
-    # assert result_yaml == test_data.result_list
+    result_json = analyse_diff_files(coll['file1_simple_json'],
+                                     coll['file2_simple_json'])
+    assert result_json == result_lists.simple
+    result_yaml = analyse_diff_files(coll['file1_simple_yml'],
+                                     coll['file2_simple_yml'])
+    assert result_yaml == result_lists.simple
+
+    result_json = analyse_diff_files(coll['file1_nest_json'],
+                                     coll['file2_nest_json'])
+    assert result_json == result_lists.nest
+    result_yaml = analyse_diff_files(coll['file1_nest_yml'],
+                                     coll['file2_nest_yml'])
+    assert result_yaml == result_lists.nest
 
 
 def test_stringify():
-    assert stringify(test_data.result_list_1) == test_data.result_string_1
+    assert stringify(result_lists.simple) == result_strings.simple
+    assert stringify(result_lists.nest) == result_strings.nest
 
 
-def test_all(coll):
+def test_gendiff(coll):
     result_json = stringify(
         analyse_diff_files(coll['file1_json'], coll['file2_json']))
-    assert result_json == test_data.result_string_2
+    assert result_json == result_strings.difficult
+
+    result_yaml = stringify(
+        analyse_diff_files(coll['file1_nest_yml'], coll['file2_nest_yml']))
+    assert result_yaml == result_strings.nest

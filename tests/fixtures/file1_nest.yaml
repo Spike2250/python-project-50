@@ -1,0 +1,9 @@
+host: hexlet.io
+timeout: 50
+proxy: 123.234.53.22
+follow: false
+setting1:
+  key1: 44
+  key2: true
+  key3:
+    aaa: 42

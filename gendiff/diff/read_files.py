@@ -2,14 +2,16 @@ import json
 import yaml
 
 
-def read_files(args, format_):
+def read_file(file, format_):
     match format_:
         case 'json':
-            first_file = json.load(open(args.first_file))
-            second_file = json.load(open(args.second_file))
+            file = json.load(open(file))
         case 'yaml':
-            first_file = yaml.safe_load(open(args.first_file))
-            second_file = yaml.safe_load(open(args.second_file))
+            file = yaml.safe_load(open(file))
         case _:
-            return 'incorrect format'
-    return first_file, second_file
+            raise ValueError
+    return file
+
+
+def read_files(file1, file2, format_):
+    return read_file(file1, format_), read_file(file2, format_)

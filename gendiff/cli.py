@@ -9,7 +9,7 @@ def parse_args():
     parser.add_argument('second_file',
                         help='path to second file')
     parser.add_argument('-f', '--format',
-                        choices=['json', 'plain', 'yaml'],
-                        default='',
+                        choices=['stylish', 'json', 'yaml'],
+                        default='stylish',
                         help='set format of output')
     return parser.parse_args()
