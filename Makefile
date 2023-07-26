@@ -32,5 +32,17 @@ coverage-missing:
 test-run-json:
 	poetry run gendiff tests/fixtures/file1.json tests/fixtures/file2.json
 
+test-run-json-plain:
+	poetry run gendiff --format plain tests/fixtures/file1.json tests/fixtures/file2.json
+
+test-run-json-json:
+	poetry run gendiff --format json tests/fixtures/file1.json tests/fixtures/file2.json
+
 test-run-yaml:
 	poetry run gendiff tests/fixtures/file1.yaml tests/fixtures/file2.yaml
+
+test-run-yaml-plain:
+	poetry run gendiff --format plain tests/fixtures/file1.yaml tests/fixtures/file2.yaml
+
+test-run-yaml-json:
+	poetry run gendiff --format json tests/fixtures/file1.yaml tests/fixtures/file2.yaml

@@ -1,7 +1,8 @@
 from gendiff.diff.read_files import read_file
 from gendiff.diff.parse_file_format import parse_format
-from gendiff.diff.formats.stylish import stylish
-from gendiff.diff.formats.plain import plain
+from gendiff.diff.formaters.plain import format_plain
+from gendiff.diff.formaters.stylish import format_stylish
+from gendiff.diff.formaters.json import format_json
 
 from gendiff.diff.analyse import analyse_diff_files
 
@@ -15,9 +16,11 @@ def generate_diff(args) -> str:
         analysed_list = analyse_diff_files(file1, file2)
 
         if args.format == 'plain':
-            return plain(analysed_list)
+            return format_plain(analysed_list)
+        elif args.format == 'json':
+            return format_json(analysed_list)
 
-        return stylish(analysed_list)
+        return format_stylish(analysed_list)
 
     except ValueError:
         return 'Format is not defined. Supported formats: "json", "yaml".'
