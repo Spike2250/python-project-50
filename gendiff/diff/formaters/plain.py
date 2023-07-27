@@ -7,13 +7,13 @@ def format_plain(diff_data) -> str:  # noqa: C901
     def iter_(values, ancestry=[]):
         for i, item in enumerate(values):
             name = ".".join(ancestry + [item.key])
+            value = adapt_value(item.value)
 
             if item.status == ' ' and isinstance(item.value, list):
                 iter_(item.value, [name])
             elif item.status == '-':
                 lines.append(f"Property '{name}' was removed")
             elif item.status == '+':
-                value = adapt_value(item.value)
                 if i != 0 and values[i - 1].key == item.key:
                     lines.pop()
                     prev_value = adapt_value(values[i - 1].value)
