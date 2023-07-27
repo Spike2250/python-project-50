@@ -98,3 +98,8 @@ def test_gendiff(coll):
     result_json = format_plain(
         analyse_diff_files(coll['file1_json'], coll['file2_json']))
     assert result_json == result_plain_strings.difficult
+
+
+""" не понимаю как писать тесты для проверки json-форматера
+    если как assert format_json(diff_data) == json.dumps(diff_data),
+    получается как то глупо вроде бы, масло масленное..."""
