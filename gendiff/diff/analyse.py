@@ -35,8 +35,6 @@ def analyse_diff_files(dict1, dict2) -> list:  # noqa: C901
                                        isinstance(dict2.get(key), dict)))
             both_values_isnt_dict = all((not isinstance(dict1.get(key), dict),
                                          not isinstance(dict2.get(key), dict)))
-            any_value_is_dict = any((isinstance(dict1.get(key), dict),
-                                     isinstance(dict2.get(key), dict)))
 
             if key_in_both_dict:
                 if values_are_same:
@@ -50,20 +48,19 @@ def analyse_diff_files(dict1, dict2) -> list:  # noqa: C901
                         add(add_value(key))
                     elif both_values_is_dict:
                         add(same_dicts_iter(key))
-                    elif any_value_is_dict:
-                        if isinstance(dict1[key], dict):
-                            add(remove_dict_iter(key))
-                            add(add_value(key))
-                        else:
-                            add(remove_value(key))
-                            add(add_dict_iter(key))
+                    elif isinstance(dict1.get(key), dict):
+                        add(remove_dict_iter(key))
+                        add(add_value(key))
+                    else:
+                        add(remove_value(key))
+                        add(add_dict_iter(key))
             elif key in dict1:
-                if isinstance(dict1[key], dict):
+                if isinstance(dict1.get(key), dict):
                     add(remove_dict_iter(key))
                 else:
                     add(remove_value(key))
             elif key in dict2:
-                if isinstance(dict2[key], dict):
+                if isinstance(dict2.get(key), dict):
                     add(add_dict_iter(key))
                 else:
                     add(add_value(key))
