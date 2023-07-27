@@ -1,7 +1,7 @@
 import json
 
 
-def format_plain(values) -> str:  # noqa: C901
+def format_plain(diff_data) -> str:  # noqa: C901
     lines = []
 
     def iter_(values, ancestry=[]):
@@ -23,7 +23,7 @@ def format_plain(values) -> str:  # noqa: C901
                 else:
                     line = f"Property '{name}' was added with value: {value}"
                     lines.append(line)
-    iter_(values)
+    iter_(diff_data)
     return '\n'.join(lines)
 
 

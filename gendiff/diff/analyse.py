@@ -2,71 +2,71 @@ from collections import namedtuple
 
 
 def analyse_diff_files(dict1, dict2) -> list:  # noqa: C901
-    Diff_str = namedtuple('Diff_str', ('status', 'key', 'value'))
+    Diff = namedtuple('Diff', ('status', 'key', 'value'))
 
     def iter_(dict1, dict2):
-        result = []
-        keys1 = list(dict1.keys())
-        keys2 = list(dict2.keys())
-        keys = list(set(keys1 + keys2))
-        keys.sort()
+        def not_changed_value(key):
+            return Diff(' ', key, dict1.get(key))
 
-        for key in keys:
-            key_in_both_dict = key in keys1 and key in keys2
-            key_only_in_first_dict = key in keys1 and key not in keys2
-            key_only_in_second_dict = key not in keys1 and key in keys2
+        def remove_value(key):
+            return Diff('-', key, dict1.get(key))
+
+        def add_value(key):
+            return Diff('+', key, dict2.get(key))
+
+        def same_dicts_iter(key):
+            return Diff(' ', key, iter_(dict1.get(key), dict2.get(key)))
+
+        def remove_dict_iter(key):
+            return Diff('-', key, iter_(dict1.get(key), dict1.get(key)))
+
+        def add_dict_iter(key):
+            return Diff('+', key, iter_(dict2.get(key), dict2.get(key)))
+
+        result = []
+        add = result.append
+
+        keys = list(set(list(dict1.keys()) + list(dict2.keys())))
+
+        for key in sorted(keys):
+            key_in_both_dict = key in dict1 and key in dict2
+            values_are_same = dict1.get(key) == dict2.get(key)
+            both_values_is_dict = all((isinstance(dict1.get(key), dict),
+                                       isinstance(dict2.get(key), dict)))
+            both_values_isnt_dict = all((not isinstance(dict1.get(key), dict),
+                                         not isinstance(dict2.get(key), dict)))
+            any_value_is_dict = any((isinstance(dict1.get(key), dict),
+                                     isinstance(dict2.get(key), dict)))
 
             if key_in_both_dict:
-                values_are_same = dict1[key] == dict2[key]
-                both_values_is_dict = all((isinstance(dict1[key], dict),
-                                           isinstance(dict2[key], dict)))
-                both_values_isnt_dict = all((not isinstance(dict1[key], dict),
-                                             not isinstance(dict2[key], dict)))
-                any_value_is_dict = any((isinstance(dict1[key], dict),
-                                         isinstance(dict2[key], dict)))
-
                 if values_are_same:
                     if both_values_isnt_dict:
-                        result.append(Diff_str(' ', key, dict1[key]))
+                        add(not_changed_value(key))
                     elif both_values_is_dict:
-                        result.append(
-                            Diff_str(' ', key, iter_(dict1[key], dict2[key]))
-                        )
+                        add(same_dicts_iter(key))
                 else:
                     if both_values_isnt_dict:
-                        result.append(Diff_str('-', key, dict1[key]))
-                        result.append(Diff_str('+', key, dict2[key]))
+                        add(remove_value(key))
+                        add(add_value(key))
                     elif both_values_is_dict:
-                        result.append(
-                            Diff_str(' ', key, iter_(dict1[key], dict2[key]))
-                        )
+                        add(same_dicts_iter(key))
                     elif any_value_is_dict:
                         if isinstance(dict1[key], dict):
-                            result.append(
-                                Diff_str('-', key,
-                                         iter_(dict1[key], dict1[key]))
-                            )
-                            result.append(Diff_str('+', key, dict2[key]))
+                            add(remove_dict_iter(key))
+                            add(add_value(key))
                         else:
-                            result.append(Diff_str('-', key, dict1[key]))
-                            result.append(
-                                Diff_str('+', key,
-                                         iter_(dict2[key], dict2[key]))
-                            )
-            elif key_only_in_first_dict:
+                            add(remove_value(key))
+                            add(add_dict_iter(key))
+            elif key in dict1:
                 if isinstance(dict1[key], dict):
-                    result.append(
-                        Diff_str('-', key, iter_(dict1[key], dict1[key]))
-                    )
+                    add(remove_dict_iter(key))
                 else:
-                    result.append(Diff_str('-', key, dict1[key]))
-            elif key_only_in_second_dict:
+                    add(remove_value(key))
+            elif key in dict2:
                 if isinstance(dict2[key], dict):
-                    result.append(
-                        Diff_str('+', key, iter_(dict2[key], dict2[key]))
-                    )
+                    add(add_dict_iter(key))
                 else:
-                    result.append(Diff_str('+', key, dict2[key]))
+                    add(add_value(key))
         return result
 
     return iter_(dict1, dict2)

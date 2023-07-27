@@ -2,7 +2,7 @@ import itertools
 import json
 
 
-def format_stylish(value, replacer=' ', spaces_count=2) -> str:
+def format_stylish(diff_data, replacer=' ', spaces_count=2) -> str:
 
     def iter_(value, depth):
         if not isinstance(value, list):
@@ -22,4 +22,4 @@ def format_stylish(value, replacer=' ', spaces_count=2) -> str:
         result = itertools.chain("{", lines, [current_indent + "}"])
         return '\n'.join(result)
 
-    return iter_(value, 0)
+    return iter_(diff_data, 0)
