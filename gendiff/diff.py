@@ -6,7 +6,7 @@ from gendiff.utils.formaters.json import format_json
 from gendiff.utils.analyse import analyse_diff_files
 
 
-def generate_diff(file1, file2, formater) -> str:
+def generate_diff(file1, file2, formater='stylish') -> str:
     try:
         file1 = read_file(file1)
         file2 = read_file(file2)
