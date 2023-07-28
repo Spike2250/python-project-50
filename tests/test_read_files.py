@@ -1,5 +1,5 @@
 import pytest
-from gendiff.gendiff.read_files import read_file, read_files
+from gendiff.utils.read_files import read_file, read_files
 
 
 def test_read_files():

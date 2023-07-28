@@ -1,10 +1,10 @@
-from gendiff.gendiff.read_files import read_file
-from gendiff.gendiff.parse_file_format import parse_format
-from gendiff.gendiff.formaters.plain import format_plain
-from gendiff.gendiff.formaters.stylish import format_stylish
-from gendiff.gendiff.formaters.json import format_json
+from gendiff.utils.read_files import read_file
+from gendiff.utils.parse_file_format import parse_format
+from gendiff.utils.formaters.plain import format_plain
+from gendiff.utils.formaters.stylish import format_stylish
+from gendiff.utils.formaters.json import format_json
 
-from gendiff.gendiff.analyse import analyse_diff_files
+from gendiff.utils.analyse import analyse_diff_files
 
 
 def generate_diff(args) -> str:

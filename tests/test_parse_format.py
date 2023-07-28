@@ -1,4 +1,4 @@
-from gendiff.gendiff.parse_file_format import parse_format
+from gendiff.utils.parse_file_format import parse_format
 
 
 def test_parse_format():
