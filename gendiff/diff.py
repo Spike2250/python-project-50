@@ -4,7 +4,7 @@ from gendiff.gendiff.formaters.plain import format_plain
 from gendiff.gendiff.formaters.stylish import format_stylish
 from gendiff.gendiff.formaters.json import format_json
 
-from gendiff.diff.analyse import analyse_diff_files
+from gendiff.gendiff.analyse import analyse_diff_files
 
 
 def generate_diff(args) -> str:
@@ -23,4 +23,6 @@ def generate_diff(args) -> str:
         return format_stylish(analysed_list)
 
     except ValueError:
-        return 'Format is not defined. Supported formats: "json", "yaml".'
+        msg = 'File\'s format is not defined. '\
+              'Supported formats: "json", "yaml".'
+        return msg
