@@ -1,8 +1,10 @@
 import json
 import yaml
+from gendiff.utils.parse_file_format import parse_format
 
 
-def read_file(file, format_):
+def read_file(file):
+    format_ = parse_format(file)
     match format_:
         case 'json':
             file = json.load(open(file))
@@ -13,5 +15,5 @@ def read_file(file, format_):
     return file
 
 
-def read_files(file1, file2, format_):
-    return read_file(file1, format_), read_file(file2, format_)
+def read_files(file1, file2):
+    return read_file(file1), read_file(file2)
