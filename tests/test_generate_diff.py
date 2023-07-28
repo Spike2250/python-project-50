@@ -6,9 +6,9 @@ from tests.fixtures import result_lists as lists
 from tests.fixtures import result_stylish_strings
 from tests.fixtures import result_plain_strings
 
-from gendiff.diff.analyse import analyse_diff_files
-from gendiff.diff.formaters.stylish import format_stylish
-from gendiff.diff.formaters.plain import format_plain
+from gendiff.gendiff.analyse import analyse_diff_files
+from gendiff.gendiff.formaters.stylish import format_stylish
+from gendiff.gendiff.formaters.plain import format_plain
 
 
 @pytest.fixture

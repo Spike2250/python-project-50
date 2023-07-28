@@ -1,8 +1,8 @@
-from gendiff.diff.read_files import read_file
-from gendiff.diff.parse_file_format import parse_format
-from gendiff.diff.formaters.plain import format_plain
-from gendiff.diff.formaters.stylish import format_stylish
-from gendiff.diff.formaters.json import format_json
+from gendiff.gendiff.read_files import read_file
+from gendiff.gendiff.parse_file_format import parse_format
+from gendiff.gendiff.formaters.plain import format_plain
+from gendiff.gendiff.formaters.stylish import format_stylish
+from gendiff.gendiff.formaters.json import format_json
 
 from gendiff.diff.analyse import analyse_diff_files
 
