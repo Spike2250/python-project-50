@@ -1,22 +1,29 @@
 import json
 
 
+ADDED = '+'
+REMOVED = '-'
+NOT_CHANGED = ' '
+
+
 def format_plain(diff_data) -> str:  # noqa: C901
     lines = []
 
     def iter_(values, ancestry=[]):
         for i, item in enumerate(values):
             name = ".".join(ancestry + [item.key])
-            value = adapt_value(item.value)
+            value = to_string(item.value)
 
-            if item.status == ' ' and isinstance(item.value, list):
+            if item.status == NOT_CHANGED and isinstance(item.value, list):
                 iter_(item.value, [name])
-            elif item.status == '-':
+
+            elif item.status == REMOVED:
                 lines.append(f"Property '{name}' was removed")
-            elif item.status == '+':
+
+            elif item.status == ADDED:
                 if i != 0 and values[i - 1].key == item.key:
                     lines.pop()
-                    prev_value = adapt_value(values[i - 1].value)
+                    prev_value = to_string(values[i - 1].value)
                     line = f"Property '{name}' was updated. "\
                            f"From {prev_value} to {value}"
                     lines.append(line)
@@ -27,7 +34,7 @@ def format_plain(diff_data) -> str:  # noqa: C901
     return '\n'.join(lines)
 
 
-def adapt_value(value):
+def to_string(value):
     if isinstance(value, bool) or value is None:
         return json.dumps(value)
     elif isinstance(value, list):

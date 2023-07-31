@@ -5,7 +5,7 @@ import json
 def format_stylish(diff_data, replacer=' ', spaces_count=2) -> str:
     def iter_(value, depth):
         if not isinstance(value, list):
-            return adapt_value(value)
+            return to_string(value)
 
         deep_indent_size = depth + spaces_count
         deep_indent = replacer * deep_indent_size
@@ -18,7 +18,7 @@ def format_stylish(diff_data, replacer=' ', spaces_count=2) -> str:
         result = itertools.chain("{", lines, [current_indent + "}"])
         return '\n'.join(result)
 
-    def adapt_value(value):
+    def to_string(value):
         if isinstance(value, bool) or value is None:
             return json.dumps(value)
         else:

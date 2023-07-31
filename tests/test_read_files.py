@@ -1,5 +1,5 @@
 import pytest
-from gendiff.utils.read_files import read_file, read_files
+from gendiff.read_files import read_file, read_files
 
 
 def test_read_files():
@@ -19,10 +19,10 @@ def test_read_files():
     assert isinstance(file1, dict)
     assert isinstance(file2, dict)
 
-    with pytest.raises(ValueError):
-        read_file('fsdfdsdfs.exe')
-    with pytest.raises(ValueError):
-        read_file('dfgkjdbnfg.js')
+    with pytest.raises(FileNotFoundError):
+        read_file('fsdfdsdfs.json')
+    with pytest.raises(FileNotFoundError):
+        read_file('dfgkjdbnfg.yaml')
 
     file1, file2 = read_files(path_file1_json, path_file2_json)
     assert isinstance(file1, dict) == isinstance(file2, dict)
