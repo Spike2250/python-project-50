@@ -9,6 +9,7 @@ from tests.fixtures import result_plain_strings
 from gendiff.diff import analyse_diff_files
 from gendiff.formaters.stylish import format_stylish
 from gendiff.formaters.plain import format_plain
+from gendiff.formaters.json import format_json
 
 
 @pytest.fixture
@@ -58,48 +59,57 @@ def coll():
     }
 
 
-def test_analyse_files(coll):
-    result_json = analyse_diff_files(coll['file1_simple_json'],
-                                     coll['file2_simple_json'])
-    assert result_json == lists.simple
-    result_yaml = analyse_diff_files(coll['file1_simple_yml'],
-                                     coll['file2_simple_yml'])
-    assert result_yaml == lists.simple
-
-    result_json = analyse_diff_files(coll['file1_nest_json'],
-                                     coll['file2_nest_json'])
-    assert result_json == lists.nest
-    result_yaml = analyse_diff_files(coll['file1_nest_yml'],
-                                     coll['file2_nest_yml'])
-    assert result_yaml == lists.nest
+@pytest.mark.parametrize('key1, key2, expected', [
+    ('file1_simple_json', 'file2_simple_json', lists.simple),
+    ('file1_simple_yml', 'file2_simple_yml', lists.simple),
+    ('file1_nest_json', 'file2_nest_json', lists.nest),
+    ('file1_nest_yml', 'file2_nest_yml', lists.nest),
+    ('file1_json', 'file2_json', lists.difficult),
+    # ('file1_yml', 'file2_yml', lists.difficult)
+])
+def test_analyse_files(coll, key1, key2, expected):
+    assert analyse_diff_files(coll[key1], coll[key2]) == expected
 
 
-def test_stylish():
-    assert format_stylish(lists.simple) == result_stylish_strings.simple
-    assert format_stylish(lists.nest) == result_stylish_strings.nest
-    assert format_stylish(lists.difficult) == result_stylish_strings.difficult
+@pytest.mark.parametrize("test_input, expected", [
+    (lists.simple, result_stylish_strings.simple),
+    (lists.nest, result_stylish_strings.nest),
+    (lists.difficult, result_stylish_strings.difficult)])
+def test_stylish(test_input, expected):
+    assert format_stylish(test_input) == expected
 
 
-def test_plain():
-    assert format_plain(lists.simple) == result_plain_strings.simple
-    assert format_plain(lists.nest) == result_plain_strings.nest
-    assert format_plain(lists.difficult) == result_plain_strings.difficult
+@pytest.mark.parametrize("test_input, expected", [
+    (lists.simple, result_plain_strings.simple),
+    (lists.nest, result_plain_strings.nest),
+    (lists.difficult, result_plain_strings.difficult)])
+def test_plain(test_input, expected):
+    assert format_plain(test_input) == expected
 
 
-def test_gendiff(coll):
-    result_json = format_stylish(
-        analyse_diff_files(coll['file1_json'], coll['file2_json']))
-    assert result_json == result_stylish_strings.difficult
+def test_json():
+    assert format_json(lists.simple) == json.dumps(lists.simple, indent=2)
 
-    result_yaml = format_stylish(
-        analyse_diff_files(coll['file1_nest_yml'], coll['file2_nest_yml']))
-    assert result_yaml == result_stylish_strings.nest
-
-    result_json = format_plain(
-        analyse_diff_files(coll['file1_json'], coll['file2_json']))
-    assert result_json == result_plain_strings.difficult
+    # тут косяк с namedtuple - json.loads() возвращает список обычных кортежей
+    # assert json.loads(format_json(lists.simple)) == lists.simple
 
 
-""" не понимаю как писать тесты для проверки json-форматера
-    если как assert format_json(diff_data) == json.dumps(diff_data),
-    получается как то глупо вроде бы, масло масленное..."""
+@pytest.mark.parametrize('key1, key2, expected1, expected2', [
+    ('file1_simple_json', 'file2_simple_json',
+        result_stylish_strings.simple, result_plain_strings.simple),
+    ('file1_simple_yml', 'file2_simple_yml',
+        result_stylish_strings.simple, result_plain_strings.simple),
+    ('file1_nest_json', 'file2_nest_json',
+        result_stylish_strings.nest, result_plain_strings.nest),
+    ('file1_nest_yml', 'file2_nest_yml',
+        result_stylish_strings.nest, result_plain_strings.nest),
+    ('file1_json', 'file2_json',
+        result_stylish_strings.difficult, result_plain_strings.difficult),
+    # ('file1_yml', 'file2_yml',
+    #     result_stylish_strings.difficult, result_plain_strings.difficult)
+])
+def test_gendiff(coll, key1, key2, expected1, expected2):
+    result_s = format_stylish(analyse_diff_files(coll[key1], coll[key2]))
+    result_p = format_plain(analyse_diff_files(coll[key1], coll[key2]))
+    assert result_s == expected1
+    assert result_p == expected2
