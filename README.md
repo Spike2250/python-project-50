@@ -2,15 +2,25 @@
 > A command line tool to calculate the difference between two data structures. Runs from the command line, compares two configuration files and shows a difference. Working with JSON and YAML. Provides output in stylish, plain and json format.
 ### Usage:
 #### Help: 
-`$ gendiff -h`
+```sh
+$ gendiff -h
+```
 #### Running:
-`$ gendiff <file_path1> <file_path2> --format <format>`
+```sh
+$ gendiff <file_path1> <file_path2> --format <format>
+```
 ##### format - optional parameter, default value is 'stylish'. Possible values: 'stylish', 'plain', 'json'.
 ### Setup 
 #### Using Makefile:
-`$ make install`
-`$ make build`
-`$ make package-install`
+```sh
+$ make install
+```
+```sh
+$ make build
+```
+```sh
+$ make package-install
+```
 ### Asciinemas
 
 
