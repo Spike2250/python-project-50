@@ -21,5 +21,6 @@ def test_parse_data():
     with open('tests/fixtures/test.json') as f:
         assert parse_data(f, 'json') == {"one": 1, "two": 2}
 
+    # тестирование парсинга данных не из файла
     data = requests.get('https://api.github.com').text
     assert isinstance(parse_data(data, 'json'), dict)
